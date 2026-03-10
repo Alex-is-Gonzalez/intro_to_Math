@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leo's Supermarket — The Math of Smart Decisions</title>
+    <link rel="stylesheet" href="leo-supermarket.css" />
+    <script src="leo-supermarket.js" defer></script>
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="nav-logo">🛒 LEO'S STORE</div>
+      <ul class="nav-links">
+        <li><a data-scroll="ch1">Multivariable</a></li>
+        <li><a data-scroll="ch2">Chain Rule</a></li>
+        <li><a data-scroll="ch3">Comp Graph</a></li>
+        <li><a data-scroll="ch4">Matrices</a></li>
+        <li><a data-scroll="ch5" style="color: var(--accent)">Quiz ✦</a></li>
+      </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="hero-grid"></div>
+      <div class="hero-badge">INTERACTIVE LEARNING EXPERIENCE</div>
+      <h1>
+        Leo's <span>Supermarket</span><br />&amp; the Math of<br />Smart
+        Decisions
+      </h1>
+      <p class="hero-sub">
+        Pull the levers, trigger the dominoes, and explore the computational
+        graph. Math comes alive when you run the store.
+      </p>
+      <div class="hero-pills">
+        <a class="pill" data-scroll="ch1">01 — Multivariable Functions</a>
+        <a class="pill" data-scroll="ch2">02 — Chain Rule</a>
+        <a class="pill" data-scroll="ch3">03 — Computational Graphs</a>
+        <a class="pill" data-scroll="ch4">04 — Matrices &amp; Dot Products</a>
+        <a
+          class="pill"
+          data-scroll="ch5"
+          style="border-color: rgba(245, 90, 200, 0.4); color: #f542c8"
+          >05 — Quiz</a
+        >
+      </div>
+      <div class="scroll-cue">↓ SCROLL TO PLAY</div>
+    </section>
+
+    <!-- ══════════════════════════ CH1 ══════════════════════════ -->
+    <div class="sec-divider"></div>
+    <section class="section" id="ch1">
+      <div class="sec-header">
+        <div class="sec-num">01</div>
+        <div class="sec-title">
+          <div class="tag tag-calc">MULTIVARIABLE CALCULUS</div>
+          <h2>More Than One Lever</h2>
+          <p>
+            Leo's profit isn't controlled by one dial — every slider feeds into
+            the final number. Drag them and watch profit recalculate live.
+          </p>
+        </div>
+      </div>
+
+      <div class="lever-panel">
+        <div class="lever-row">
+          <div class="lbl"><strong>💰 Price (p)</strong>$/unit</div>
+          <input
+            type="range"
+            id="sl-price"
+            min="1"
+            max="10"
+            step="0.1"
+            value="4"
+          />
+          <div class="lval" id="v-price">$4.00</div>
+        </div>
+        <div class="lever-row">
+          <div class="lbl">
+            <strong>📦 Shelf Space (s)</strong>facings 0–100
+          </div>
+          <input
+            type="range"
+            id="sl-shelf"
+            min="10"
+            max="100"
+            step="1"
+            value="50"
+          />
+          <div class="lval" id="v-shelf">50</div>
+        </div>
+        <div class="lever-row">
+          <div class="lbl"><strong>📣 Ad Spend (a)</strong>$0–$500/wk</div>
+          <input
+            type="range"
+            id="sl-ad"
+            min="0"
+            max="500"
+            step="10"
+            value="100"
+          />
+          <div class="lval" id="v-ad">$100</div>
+        </div>
+        <div class="lever-row">
+          <div class="lbl"><strong>🏗️ Inventory (i)</strong>units stocked</div>
+          <input
+            type="range"
+            id="sl-inv"
+            min="50"
+            max="500"
+            step="10"
+            value="200"
+          />
+          <div class="lval" id="v-inv">200</div>
+        </div>
+        <div class="profit-bar">
+          <div>
+            <div
+              style="
+                font-size: 0.7rem;
+                color: var(--muted);
+                letter-spacing: 0.1em;
+              "
+            >
+              WEEKLY PROFIT
+            </div>
+            <div class="profit-info" id="profit-info">
+              Revenue $0 − Cost $0 | Demand ≈ 0 units
+            </div>
+          </div>
+          <div class="profit-num" id="profit-num">$0</div>
+        </div>
+        <div class="callout" id="lever-callout">
+          💡 <strong>Tip:</strong> Try raising price all the way — does profit
+          always go up? Watch demand respond.
+        </div>
+      </div>
+
+      <div class="g2">
+        <div class="card">
+          <h3>The Profit Function</h3>
+          <div class="eq">π(p, s, a, i) = p·D(p,s,a) − C(i, D)</div>
+          <p style="font-size: 0.84rem; color: var(--muted); line-height: 1.7">
+            D = demand (depends on price, shelf space, ads). C = cost (depends
+            on inventory &amp; demand). This is a
+            <em>multivariable function</em> — output depends on multiple inputs
+            simultaneously.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Why Not Single-Variable?</h3>
+          <p style="font-size: 0.84rem; color: var(--muted); line-height: 1.8">
+            Single-variable calculus asks: "how does profit change with price
+            alone?" But real decisions couple together. You need
+            <strong style="color: var(--accent)">partial derivatives</strong> —
+            ∂π/∂p, ∂π/∂s, ∂π/∂a, ∂π/∂i — one for each lever.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ CH2 ══════════════════════════ -->
+    <div class="sec-divider"></div>
+    <section class="section" id="ch2">
+      <div class="sec-header">
+        <div class="sec-num">02</div>
+        <div class="sec-title">
+          <div class="tag tag-chain">CHAIN RULE</div>
+          <h2>The Domino Effect</h2>
+          <p>
+            Leo raised cereal price by 50¢. Click the first domino or press
+            Trigger to watch the chain reaction ripple through his store.
+          </p>
+        </div>
+      </div>
+
+      <div class="domino-wrap">
+        <div class="domino-scroll" id="domino-chain">
+          <div class="dnode" id="dom-0">
+            <div class="dicon">💰</div>
+            <div class="dname">Price</div>
+            <div class="dchange">+$0.50</div>
+          </div>
+          <div class="darrow" id="da-0">
+            <div class="alabel">inverse</div>
+            <div class="arr">→</div>
+          </div>
+          <div class="dnode" id="dom-1">
+            <div class="dicon">📉</div>
+            <div class="dname">Demand</div>
+            <div class="dchange">D ↓ 20%</div>
+          </div>
+          <div class="darrow" id="da-1">
+            <div class="alabel">direct</div>
+            <div class="arr">→</div>
+          </div>
+          <div class="dnode" id="dom-2">
+            <div class="dicon">📦</div>
+            <div class="dname">Inventory</div>
+            <div class="dchange">surplus ↑</div>
+          </div>
+          <div class="darrow" id="da-2">
+            <div class="alabel">direct</div>
+            <div class="arr">→</div>
+          </div>
+          <div class="dnode" id="dom-3">
+            <div class="dicon">🗑️</div>
+            <div class="dname">Waste</div>
+            <div class="dchange">expired ↑</div>
+          </div>
+          <div class="darrow" id="da-3">
+            <div class="alabel">direct</div>
+            <div class="arr">→</div>
+          </div>
+          <div class="dnode" id="dom-4">
+            <div class="dicon">💸</div>
+            <div class="dname">Cost</div>
+            <div class="dchange">write-off ↑</div>
+          </div>
+          <div class="darrow" id="da-4">
+            <div class="alabel">inverse</div>
+            <div class="arr">→</div>
+          </div>
+          <div class="dnode" id="dom-5">
+            <div class="dicon">📊</div>
+            <div class="dname">Profit</div>
+            <div class="dchange">π ↓</div>
+          </div>
+        </div>
+        <div class="chain-story" id="chain-story">
+          👆 Click the
+          <strong style="color: var(--accent)">Price</strong> domino or press
+          Trigger to start the reaction...
+        </div>
+        <div class="chain-btns">
+          <button class="btn btn-y" id="btn-trigger">▶ Trigger Chain</button>
+          <button class="btn btn-g" id="btn-reset">↺ Reset</button>
+          <span class="step-lbl" id="step-lbl"></span>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 1.25rem">
+        <h3>Chain Rule Equation</h3>
+        <div class="eq">
+          dπ/dp = (dπ/dC) · (dC/dW) · (dW/dI) · (dI/dD) · (dD/dp)
+        </div>
+        <p style="font-size: 0.84rem; color: var(--muted); line-height: 1.8">
+          Each domino arrow is a derivative. The chain rule multiplies them all
+          to find the total effect of a price change on profit — this is exactly
+          how neural networks compute
+          <strong style="color: var(--accent2)">backpropagation</strong>.
+        </p>
+        <div class="callout" style="margin-top: 0.75rem">
+          <strong>Key Insight:</strong> A small price increase can destroy
+          profit when downstream consequences amplify. Leo lost money despite
+          charging more!
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ CH3 ══════════════════════════ -->
+    <div class="sec-divider"></div>
+    <section class="section" id="ch3">
+      <div class="sec-header">
+        <div class="sec-num">03</div>
+        <div class="sec-title">
+          <div class="tag tag-graph">COMPUTATIONAL GRAPHS</div>
+          <h2>Leo's Decision Map</h2>
+          <p>
+            Click any node to highlight its forward path. Use the buttons below
+            to animate forward prediction or backward gradient flow.
+          </p>
+        </div>
+      </div>
+
+      <canvas id="compCanvas" height="400"></canvas>
+
+      <div class="graph-legend">
+        <div class="gl-item">
+          <div class="gl-dot" style="background: var(--accent)"></div>
+          Input (Leo controls)
+        </div>
+        <div class="gl-item">
+          <div class="gl-dot" style="background: var(--accent2)"></div>
+          Intermediate
+        </div>
+        <div class="gl-item">
+          <div class="gl-dot" style="background: var(--accent4)"></div>
+          Output
+        </div>
+        <div class="gl-item">
+          <div class="gl-dot" style="background: var(--accent3)"></div>
+          Gradient flow
+        </div>
+      </div>
+
+      <div class="g2" style="margin-top: 1.25rem">
+        <div class="card">
+          <h3>Forward Pass</h3>
+          <p style="font-size: 0.84rem; color: var(--muted); line-height: 1.8">
+            Information flows
+            <strong style="color: var(--accent)">left → right</strong>. Leo sets
+            inputs and the graph computes the output (profit). This is
+            <em>prediction</em>.
+          </p>
+          <button class="btn btn-y" style="margin-top: 1rem" id="btn-forward">
+            ▶ Run Forward Pass
+          </button>
+        </div>
+        <div class="card">
+          <h3>Backward Pass (Gradients)</h3>
+          <p style="font-size: 0.84rem; color: var(--muted); line-height: 1.8">
+            Gradients flow
+            <strong style="color: var(--accent3)">right → left</strong>. After
+            computing profit, this tells Leo — and neural networks —
+            <em>what to change</em>.
+          </p>
+          <button class="btn btn-g" style="margin-top: 1rem" id="btn-backward">
+            ← Run Backward Pass
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ CH4 ══════════════════════════ -->
+    <div class="sec-divider"></div>
+    <section class="section" id="ch4">
+      <div class="sec-header">
+        <div class="sec-num">04</div>
+        <div class="sec-title">
+          <div class="tag tag-matrix">LINEAR ALGEBRA</div>
+          <h2>Leo Discovers Matrices</h2>
+          <p>
+            Instead of calculating each product's revenue one at a time, Leo
+            stacks everything into vectors. Adjust prices and demand — watch the
+            dot product update instantly.
+          </p>
+        </div>
+      </div>
+
+      <div class="matrix-stage">
+        <div>
+          <div
+            style="
+              font-size: 0.62rem;
+              color: var(--muted);
+              text-align: center;
+              margin-bottom: 0.4rem;
+              font-family: monospace;
+            "
+          >
+            PRICE VECTOR P
+          </div>
+          <div class="mat">
+            <div class="mrow"><div class="mcell" id="mp0">3</div></div>
+            <div class="mrow"><div class="mcell" id="mp1">2</div></div>
+            <div class="mrow"><div class="mcell" id="mp2">4</div></div>
+            <div class="mrow"><div class="mcell" id="mp3">5</div></div>
+          </div>
+        </div>
+        <div class="mat-op">·</div>
+        <div>
+          <div
+            style="
+              font-size: 0.62rem;
+              color: var(--muted);
+              text-align: center;
+              margin-bottom: 0.4rem;
+              font-family: monospace;
+            "
+          >
+            DEMAND VECTOR D
+          </div>
+          <div class="mat">
+            <div class="mrow"><div class="mcell" id="md0">100</div></div>
+            <div class="mrow"><div class="mcell" id="md1">200</div></div>
+            <div class="mrow"><div class="mcell" id="md2">150</div></div>
+            <div class="mrow"><div class="mcell" id="md3">80</div></div>
+          </div>
+        </div>
+        <div class="mat-op">=</div>
+        <div class="res-box">
+          <div class="rl">TOTAL REVENUE</div>
+          <div class="rv" id="dot-result">$1,700</div>
+        </div>
+      </div>
+
+      <div class="dot-steps" id="dot-steps">
+        <div class="dstep" id="ds0">
+          🌾 Cereal: $<span id="sp0">3</span> × <span id="sd0">100</span> =
+          $<span id="sr0">300</span>
+        </div>
+        <div class="dstep" id="ds1">
+          🥛 Milk: $<span id="sp1">2</span> × <span id="sd1">200</span> = $<span
+            id="sr1"
+            >400</span
+          >
+        </div>
+        <div class="dstep" id="ds2">
+          🍞 Bread: $<span id="sp2">4</span> × <span id="sd2">150</span> =
+          $<span id="sr2">600</span>
+        </div>
+        <div class="dstep" id="ds3">
+          🍫 Snacks: $<span id="sp3">5</span> × <span id="sd3">80</span> =
+          $<span id="sr3">400</span>
+        </div>
+        <div class="dstep total" id="ds-total">
+          Total Revenue = $<span id="sr-total">1,700</span>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 1rem">
+        <button class="btn btn-y" id="btn-animate-dot">
+          ▶ Animate Dot Product
+        </button>
+      </div>
+
+      <div class="mat-sliders">
+        <div class="mlev">
+          <div class="mlev-lbl">🌾 Cereal Price <span id="ml-p0">$3</span></div>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value="3"
+            data-matrix-idx="0"
+            data-matrix-type="p"
+          />
+        </div>
+        <div class="mlev">
+          <div class="mlev-lbl">
+            🌾 Cereal Demand <span id="ml-d0">100</span>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="500"
+            value="100"
+            data-matrix-idx="0"
+            data-matrix-type="d"
+          />
+        </div>
+        <div class="mlev">
+          <div class="mlev-lbl">🥛 Milk Price <span id="ml-p1">$2</span></div>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value="2"
+            data-matrix-idx="1"
+            data-matrix-type="p"
+          />
+        </div>
+        <div class="mlev">
+          <div class="mlev-lbl">🥛 Milk Demand <span id="ml-d1">200</span></div>
+          <input
+            type="range"
+            min="0"
+            max="500"
+            value="200"
+            data-matrix-idx="1"
+            data-matrix-type="d"
+          />
+        </div>
+        <div class="mlev">
+          <div class="mlev-lbl">🍞 Bread Price <span id="ml-p2">$4</span></div>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value="4"
+            data-matrix-idx="2"
+            data-matrix-type="p"
+          />
+        </div>
+        <div class="mlev">
+          <div class="mlev-lbl">
+            🍞 Bread Demand <span id="ml-d2">150</span>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="500"
+            value="150"
+            data-matrix-idx="2"
+            data-matrix-type="d"
+          />
+        </div>
+        <div class="mlev">
+          <div class="mlev-lbl">🍫 Snacks Price <span id="ml-p3">$5</span></div>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value="5"
+            data-matrix-idx="3"
+            data-matrix-type="p"
+          />
+        </div>
+        <div class="mlev">
+          <div class="mlev-lbl">
+            🍫 Snacks Demand <span id="ml-d3">80</span>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="500"
+            value="80"
+            data-matrix-idx="3"
+            data-matrix-type="d"
+          />
+        </div>
+      </div>
+      <div class="callout" style="margin-top: 1.25rem">
+        <strong>Why matrices?</strong> One dot product P·D computes total
+        revenue for the entire store simultaneously. With 1000 products this
+        scales effortlessly — the same operation, no extra code.
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ CH5 QUIZ ══════════════════════════ -->
+    <div class="sec-divider"></div>
+    <section class="section" id="ch5">
+      <div class="sec-header">
+        <div class="sec-num">05</div>
+        <div class="sec-title">
+          <div class="tag tag-quiz">KNOWLEDGE CHECK</div>
+          <h2>Test Your Understanding</h2>
+          <p>
+            12 questions across all four chapters. Score ≥ 80% to unlock your
+            downloadable answer sheet.
+          </p>
+        </div>
+      </div>
+
+      <!-- START -->
+      <div class="qpanel" id="quiz-start">
+        <div class="quiz-start-inner">
+          <div style="font-size: 3.5rem; margin-bottom: 1rem">🛒</div>
+          <h3
+            style="font-size: 1.8rem; font-weight: 900; margin-bottom: 0.6rem"
+          >
+            Ready to run the store?
+          </h3>
+          <p
+            style="
+              color: var(--muted);
+              max-width: 400px;
+              margin: 0 auto 1.5rem;
+              line-height: 1.7;
+              font-size: 0.9rem;
+            "
+          >
+            12 questions · 4 chapters · Need 80% to unlock your answer sheet.
+          </p>
+          <div class="qmeta">
+            <div class="qmeta-item">
+              <div class="qmeta-num">12</div>
+              <div class="qmeta-lbl">Questions</div>
+            </div>
+            <div class="qmeta-item">
+              <div class="qmeta-num">4</div>
+              <div class="qmeta-lbl">Topics</div>
+            </div>
+            <div class="qmeta-item">
+              <div class="qmeta-num">80%</div>
+              <div class="qmeta-lbl">Pass Score</div>
+            </div>
+          </div>
+          <button
+            class="btn btn-y"
+            id="btn-start-quiz"
+            style="margin-top: 2rem; padding: 0.85rem 2.2rem"
+          >
+            ▶ Start Quiz
+          </button>
+        </div>
+      </div>
+
+      <!-- QUESTION -->
+      <div class="qpanel" id="quiz-question" style="display: none">
+        <div class="qprogwrap"><div class="qprog" id="qprog"></div></div>
+        <div class="qhead">
+          <span class="qtag" id="qtag"></span>
+          <span class="qcount" id="qcount"></span>
+        </div>
+        <div class="qtext" id="qtext"></div>
+        <div class="qopts" id="qopts"></div>
+        <div class="qfb" id="qfb" style="display: none"></div>
+        <div class="qnext-row">
+          <button class="btn btn-y" id="qnext" style="display: none">
+            Next →
+          </button>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="qpanel" id="quiz-results" style="display: none">
+        <div class="res-inner">
+          <div class="ring-wrap">
+            <svg viewBox="0 0 120 120" width="150" height="150">
+              <circle
+                cx="60"
+                cy="60"
+                r="52"
+                fill="none"
+                stroke="var(--border)"
+                stroke-width="8"
+              />
+              <circle
+                cx="60"
+                cy="60"
+                r="52"
+                fill="none"
+                id="ring-arc"
+                stroke-width="8"
+                stroke-linecap="round"
+                stroke-dasharray="326.7"
+                stroke-dashoffset="326.7"
+                transform="rotate(-90 60 60)"
+                style="transition: stroke-dashoffset 1.2s ease"
+              />
+            </svg>
+            <div class="ring-label">
+              <div class="ring-pct" id="rpct">0%</div>
+              <div class="ring-sub" id="rgrade">–</div>
+            </div>
+          </div>
+          <h3 class="res-h" id="res-h">–</h3>
+          <p class="res-sub" id="res-sub"></p>
+          <div id="dl-zone" style="display: none">
+            <button class="btn-dl" id="btn-download">
+              📥 Download Results &amp; Answer Sheet
+            </button>
+          </div>
+          <div class="nudge" id="nudge-zone" style="display: none"></div>
+          <div class="breakdown" id="breakdown"></div>
+          <div class="res-btns">
+            <button class="btn btn-y" id="btn-retake">↺ Retake Quiz</button>
+            <button class="btn btn-g" id="btn-close-quiz">✕ Close</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      BUILT FOR LEO'S MATH CLASS · MULTIVARIABLE CALCULUS &amp; MACHINE LEARNING
+      · INTERACTIVE EDITION
+    </footer>
+  </body>
+</html>
