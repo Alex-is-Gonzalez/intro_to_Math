@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
     window.scrollTo({ top: top, behavior: "smooth" });
   }
 
-  // Wire up nav links  [data-scroll="ch1"] etc.
   document.querySelectorAll("[data-scroll]").forEach(function (el) {
     el.addEventListener("click", function () {
       navScrollTo(el.getAttribute("data-scroll"));
@@ -131,7 +130,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("step-lbl").textContent = "";
   }
 
-  // Domino click listeners
   for (var d = 0; d <= 5; d++) {
     (function (idx) {
       var node = document.getElementById("dom-" + idx);
@@ -342,7 +340,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("btn-backward")
     .addEventListener("click", runBackward);
-
   window.addEventListener("resize", resizeCanvas);
   resizeCanvas();
 
@@ -377,7 +374,6 @@ document.addEventListener("DOMContentLoaded", function () {
       "$" + total.toLocaleString();
   }
 
-  // Wire up matrix sliders via data attributes
   document.querySelectorAll("[data-matrix-idx]").forEach(function (input) {
     input.addEventListener("input", function () {
       updateMatrix(
@@ -573,9 +569,11 @@ document.addEventListener("DOMContentLoaded", function () {
     },
   ];
 
+  // ── Student name + quiz state ──────────────────────────────
   var qIdx = 0,
     userAns = [],
-    didAnswer = false;
+    didAnswer = false,
+    studentName = "";
 
   function showQPanel(id) {
     ["quiz-start", "quiz-question", "quiz-results"].forEach(function (p) {
@@ -583,7 +581,23 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // ── Start: validate name first ─────────────────────────────
   function startQuiz() {
+    var nameInput = document.getElementById("student-name");
+    var hint = document.getElementById("name-hint");
+    var name = nameInput.value.trim();
+
+    if (!name) {
+      hint.style.display = "block";
+      nameInput.classList.add("name-input-error");
+      nameInput.focus();
+      return;
+    }
+
+    hint.style.display = "none";
+    nameInput.classList.remove("name-input-error");
+    studentName = name;
+
     qIdx = 0;
     userAns = [];
     didAnswer = false;
@@ -661,6 +675,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var pct = Math.round((score / total) * 100);
     var arc = document.getElementById("ring-arc");
     var pass = pct >= 80;
+
     arc.style.stroke = pass
       ? "var(--accent4)"
       : pct >= 50
@@ -669,18 +684,21 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(function () {
       arc.style.strokeDashoffset = 326.7 - (pct / 100) * 326.7;
     }, 80);
+
     document.getElementById("rpct").textContent = pct + "%";
     document.getElementById("rpct").style.color = pass
       ? "var(--accent4)"
       : pct >= 50
         ? "var(--accent)"
         : "var(--accent3)";
+
     var grade = "F";
     if (pct >= 90) grade = "A";
     else if (pct >= 80) grade = "B";
     else if (pct >= 70) grade = "C";
     else if (pct >= 60) grade = "D";
     document.getElementById("rgrade").textContent = "GRADE " + grade;
+
     var titles = [
       [
         90,
@@ -719,6 +737,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     document.getElementById("res-h").textContent = found[1];
     document.getElementById("res-sub").textContent = found[2];
+
+    // ── Download / nudge zones ──
     document.getElementById("dl-zone").style.display = pass ? "block" : "none";
     document.getElementById("nudge-zone").style.display = pass
       ? "none"
@@ -733,13 +753,48 @@ document.addEventListener("DOMContentLoaded", function () {
         need +
         " more percentage point" +
         (need === 1 ? "" : "s") +
-        "</strong> to unlock the answer sheet.<br>" +
-        "That is just " +
+        "</strong> to unlock the answer sheet.<br>That is just " +
         moreQ +
         " more correct answer" +
         (moreQ === 1 ? "" : "s") +
         ". You've got this — hit Retake!";
     }
+
+    // ── Personalised pass banner ──
+    var banner = document.getElementById("pass-banner");
+    if (pass) {
+      banner.style.display = "block";
+      banner.innerHTML =
+        '<div class="pass-banner-inner">' +
+        '<div class="pass-confetti">🎓</div>' +
+        '<div class="pass-name">' +
+        studentName +
+        "</div>" +
+        '<div class="pass-score-line">scored <strong>' +
+        pct +
+        "%</strong> — Grade " +
+        grade +
+        "</div>" +
+        '<div class="pass-tagline">Certified Store Manager · Leo\'s Math Class</div>' +
+        '<button class="btn btn-y" id="btn-cert">📄 Download Certificate (PDF)</button>' +
+        "</div>";
+      // Wire up cert button now that it exists in the DOM
+      var now = new Date();
+      var dateStr = now.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+      document
+        .getElementById("btn-cert")
+        .addEventListener("click", function () {
+          downloadCertificate(studentName, pct + "%", grade, dateStr);
+        });
+    } else {
+      banner.style.display = "none";
+    }
+
+    // ── Chapter breakdown ──
     var chapters = {};
     QS.forEach(function (q, i) {
       var k = q.ch.split("·")[1].trim();
@@ -768,6 +823,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // ── CSV download — includes student name ──
   function downloadCSV() {
     var total = QS.length;
     var score = userAns.filter(function (a) {
@@ -783,7 +839,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var esc = function (s) {
       return '"' + String(s).replace(/"/g, '""') + '"';
     };
+
     var csv = "LEO'S SUPERMARKET - QUIZ RESULTS\n";
+    csv += "Student," + esc(studentName) + "\n";
     csv +=
       "Date," +
       esc(
@@ -826,6 +884,7 @@ document.addEventListener("DOMContentLoaded", function () {
           .map(esc)
           .join(",") + "\n";
     });
+
     var blob = new Blob([csv], { type: "text/csv" });
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
@@ -835,7 +894,7 @@ document.addEventListener("DOMContentLoaded", function () {
     URL.revokeObjectURL(url);
   }
 
-  // Wire up quiz buttons
+  // ── Wire up all quiz buttons ──
   document
     .getElementById("btn-start-quiz")
     .addEventListener("click", startQuiz);
@@ -849,4 +908,176 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("btn-download")
     .addEventListener("click", downloadCSV);
   document.getElementById("qnext").addEventListener("click", nextQ);
+
+  // Clear error state when user starts typing their name
+  document
+    .getElementById("student-name")
+    .addEventListener("input", function () {
+      if (this.value.trim()) {
+        this.classList.remove("name-input-error");
+        document.getElementById("name-hint").style.display = "none";
+      }
+    });
 }); // end DOMContentLoaded
+
+// ─────────────────────────────────────────
+// CERTIFICATE — generated client-side with jsPDF
+// Called from the pass banner Download Certificate button
+// ─────────────────────────────────────────
+
+function downloadCertificate(name, score, grade, date) {
+  // Dynamically load jsPDF from CDN if not already present
+  function generate(jsPDF) {
+    var doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+    var W = 297,
+      H = 210;
+
+    // Background
+    doc.setFillColor(13, 15, 20);
+    doc.rect(0, 0, W, H, "F");
+
+    // Outer gold border
+    doc.setDrawColor(245, 200, 66);
+    doc.setLineWidth(0.8);
+    doc.rect(14, 10, W - 28, H - 20, "S");
+
+    // Inner grey border
+    doc.setDrawColor(42, 48, 69);
+    doc.setLineWidth(0.3);
+    doc.rect(18, 14, W - 36, H - 28, "S");
+
+    // Corner gold squares
+    [
+      [14, 10],
+      [W - 14, 10],
+      [14, H - 10],
+      [W - 14, H - 10],
+    ].forEach(function (pt) {
+      doc.setFillColor(245, 200, 66);
+      doc.rect(pt[0] - 2, pt[1] - 2, 4, 4, "F");
+    });
+
+    // Top label
+    doc.setTextColor(245, 200, 66);
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "bold");
+    doc.text("LEO'S SUPERMARKET  ·  MATH OF SMART DECISIONS", W / 2, 20, {
+      align: "center",
+    });
+
+    // Gold rule
+    doc.setDrawColor(245, 200, 66);
+    doc.setLineWidth(0.4);
+    doc.line(40, 23, W - 40, 23);
+
+    // Certificate of Achievement
+    doc.setTextColor(232, 236, 245);
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text("C E R T I F I C A T E   O F   A C H I E V E M E N T", W / 2, 32, {
+      align: "center",
+    });
+
+    // This certifies that
+    doc.setTextColor(107, 116, 148);
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "italic");
+    doc.text("This certifies that", W / 2, 44, { align: "center" });
+
+    // Student name — scale to fit
+    var fontSize = 40;
+    doc.setFont("helvetica", "bold");
+    while (doc.getTextWidth(name) > W - 80 && fontSize > 20) {
+      fontSize -= 1;
+      doc.setFontSize(fontSize);
+    }
+    doc.setTextColor(245, 200, 66);
+    doc.setFontSize(fontSize);
+    doc.text(name, W / 2, 62, { align: "center" });
+
+    // Underline
+    var nw = doc.getTextWidth(name);
+    doc.setDrawColor(245, 200, 66);
+    doc.setLineWidth(0.4);
+    doc.line(W / 2 - nw / 2 - 4, 65, W / 2 + nw / 2 + 4, 65);
+
+    // "has successfully completed"
+    doc.setTextColor(107, 116, 148);
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "italic");
+    doc.text(
+      "has successfully completed the interactive quiz and demonstrated mastery of",
+      W / 2,
+      76,
+      { align: "center" },
+    );
+
+    // Subject
+    doc.setTextColor(232, 236, 245);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text(
+      "Multivariable Calculus  ·  Chain Rule  ·  Computational Graphs  ·  Linear Algebra",
+      W / 2,
+      87,
+      { align: "center" },
+    );
+
+    // Badges
+    var badgeY = 105,
+      bw = 36,
+      bh = 16;
+    function badge(cx, topLabel, val, borderRGB, textRGB) {
+      var bx = cx - bw / 2,
+        by = badgeY - bh / 2;
+      doc.setFillColor(22, 26, 36);
+      doc.setDrawColor(borderRGB[0], borderRGB[1], borderRGB[2]);
+      doc.setLineWidth(0.5);
+      doc.roundedRect(bx, by, bw, bh, 2, 2, "FD");
+      doc.setTextColor(107, 116, 148);
+      doc.setFontSize(6);
+      doc.setFont("helvetica", "normal");
+      doc.text(topLabel, cx, by + 5, { align: "center" });
+      doc.setTextColor(textRGB[0], textRGB[1], textRGB[2]);
+      doc.setFontSize(13);
+      doc.setFont("helvetica", "bold");
+      doc.text(val, cx, by + 13, { align: "center" });
+    }
+
+    badge(W / 2 - 44, "SCORE", score, [66, 245, 135], [66, 245, 135]);
+    badge(W / 2, "GRADE", grade, [245, 200, 66], [245, 200, 66]);
+    badge(W / 2 + 44, "DATE", date, [66, 200, 245], [66, 200, 245]);
+
+    // Bottom rule + issuer
+    doc.setDrawColor(42, 48, 69);
+    doc.setLineWidth(0.3);
+    doc.line(40, H - 24, W - 40, H - 24);
+    doc.setTextColor(107, 116, 148);
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "normal");
+    doc.text(
+      "Issued by The Knowledge House  ·  Interactive Learning Edition",
+      W / 2,
+      H - 16,
+      { align: "center" },
+    );
+    doc.setTextColor(245, 200, 66);
+    doc.setFont("helvetica", "bold");
+    doc.text("TKH 2026", 22, H - 16);
+
+    doc.save("leo-certificate-" + name.replace(/\s+/g, "-") + ".pdf");
+  }
+
+  if (typeof window.jspdf !== "undefined") {
+    generate(window.jspdf.jsPDF);
+  } else {
+    var script = document.createElement("script");
+    script.src =
+      "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+    script.onload = function () {
+      generate(window.jspdf.jsPDF);
+    };
+    document.head.appendChild(script);
+  }
+}
+// end DOMContentLoaded
