@@ -567,10 +567,24 @@
               <div class="qmeta-lbl">Pass Score</div>
             </div>
           </div>
+          <div class="name-input-wrap">
+            <label class="name-label" for="student-name">Your Name</label>
+            <input
+              type="text"
+              id="student-name"
+              class="name-input"
+              placeholder="e.g. Alex Johnson"
+              maxlength="50"
+              autocomplete="off"
+            />
+            <p class="name-hint" id="name-hint" style="display: none">
+              Please enter your name to begin.
+            </p>
+          </div>
           <button
             class="btn btn-y"
             id="btn-start-quiz"
-            style="margin-top: 2rem; padding: 0.85rem 2.2rem"
+            style="margin-top: 1.5rem; padding: 0.85rem 2.2rem"
           >
             ▶ Start Quiz
           </button>
@@ -634,6 +648,7 @@
             </button>
           </div>
           <div class="nudge" id="nudge-zone" style="display: none"></div>
+          <div class="pass-banner" id="pass-banner" style="display: none"></div>
           <div class="breakdown" id="breakdown"></div>
           <div class="res-btns">
             <button class="btn btn-y" id="btn-retake">↺ Retake Quiz</button>
